@@ -9,6 +9,14 @@ class Infinitescroll extends React.Component {
     total_pages: null,
     scrolling: false
   };
+  handleScroll = () => {
+    var lastLi = document.querySelector("ul.container > li:last-child");
+    var lastLiOffset = lastLi.offsetTop + lastLi.clientHeight;
+    var pageOffset = window.pageYOffset + window.innerHeight;
+    if (pageOffset > lastLiOffset) {
+      this.loadMore();
+    }
+  };
   loadUser = () => {
     const { per, page, data } = this.state;
     const url = `https://reqres.in/api/users?per_page=${per}&page=${page}`;
@@ -24,9 +32,9 @@ class Infinitescroll extends React.Component {
   };
   componentWillMount() {
     this.loadUser();
-    // this.scrollListener = window.addEventListener("scroll", e => {
-    //   this.handleScroll(e);
-    // });
+    this.scrollListener = window.addEventListener("scroll", e => {
+      this.handleScroll(e);
+    });
   }
   loadMore = () => {
     this.setState(
@@ -40,7 +48,7 @@ class Infinitescroll extends React.Component {
   render() {
     return (
       <div>
-        <ul>
+        <ul class="container">
           {this.state.data.map(data => (
             <li key={data.id}>
               <div>
